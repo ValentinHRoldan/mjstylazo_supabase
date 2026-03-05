@@ -2,9 +2,11 @@
 
 import { ShoppingBag, ArrowLeft } from "lucide-react";
 import Link from "next/link";
+import Image from "next/image"
 import { usePathname } from "next/navigation";
 import { CartProvider, useCart } from "@/components/cart-provider";
 import { CartSidebar } from "@/components/cart-sidebar";
+
 
 function Header() {
   const { totalItems, openCart } = useCart();
@@ -12,7 +14,7 @@ function Header() {
   const isDetail = pathname.startsWith("/product/");
 
   return (
-    <header className="sticky top-0 z-30 border-b border-border bg-card/80 backdrop-blur-md">
+    <header className="sticky top-0 z-30 border-b border-border bg-card backdrop-blur-md">
       <div className="mx-auto flex max-w-6xl items-center justify-between px-6 py-4">
         <div className="flex items-center gap-3">
           {isDetail && (
@@ -25,8 +27,15 @@ function Header() {
             </Link>
           )}
           <Link href="/">
-            <h1 className="text-xl font-bold tracking-tight text-foreground">
-              REMERAS
+            <h1 className="flex items-center gap-2 text-xl font-bold tracking-tight text-foreground">
+              <Image
+                src="/ICONSVG.svg"
+                alt="MJStylazo"
+                width={120}
+                height={40}
+                className="h-10 w-auto"
+              />
+              MJSTYLAZO
             </h1>
           </Link>
         </div>
