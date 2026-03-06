@@ -7,17 +7,19 @@ export default async function HomePage() {
     .from("productos")
     .select(`
       *,
-      producto_variantes (
+      producto_variantes!inner (
         *,
         producto_variante_imagenes (*)
       )
     `)
     .eq("activo", true)
+    .gt("producto_variantes.stock", 0);
 
   if (error) {
     console.error(error)
   }
   const products = (productos ?? []).map(transformProduct)
+  console.log(productos);
   // console.log(JSON.stringify(productos, null, 2))
   return (
     <main className="mx-auto max-w-6xl px-6 py-10">

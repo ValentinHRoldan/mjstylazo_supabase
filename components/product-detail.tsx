@@ -21,7 +21,7 @@ export function ProductDetail({
     product.variants[0];
 //   console.log("variante principal ", product.variants);
 
-  const { addToCart, openCart } = useCart();
+  const { items, addToCart, openCart } = useCart();
   const [added, setAdded] = useState(false);
   const [selectedColor, setSelectedColor] = useState(
     initialColor ??
@@ -55,9 +55,17 @@ export function ProductDetail({
     v.activo
   );
 
-
+  const quantityInCart = items
+    .filter(
+      (item) =>
+        item.product.id === product.id &&
+        item.size === selectedSize &&
+        item.color === selectedColor
+    )
+    .reduce((sum, item) => sum + item.quantity, 0);
 //   console.log(selectedVariant)
-
+  const isOutOfStock = selectedVariant && quantityInCart >= selectedVariant.stock;
+  const remainingStock = selectedVariant ? selectedVariant.stock - quantityInCart : 0;
   function colorDisponible(colorName: string) {
     if (!selectedSize) return true;
 
@@ -237,7 +245,7 @@ export function ProductDetail({
                   aria-label={`Talle ${size}`}
                   aria-checked={selectedSize === size}
                   role="radio"
-                  className={`flex h-10 min-w-[2.75rem] items-center justify-center rounded-md border px-3 text-sm font-medium transition-all
+                  className={`flex h-10 min-w-11 items-center justify-center rounded-md border px-3 text-sm font-medium transition-all
                     ${
                       disabled
                         ? "opacity-40 cursor-not-allowed" 
@@ -271,33 +279,33 @@ export function ProductDetail({
                   key={feature}
                   className="flex items-start gap-2 text-sm text-muted-foreground"
                 >
-                  <Check className="mt-0.5 h-4 w-4 flex-shrink-0 text-accent" />
+                  <Check className="mt-0.5 h-4 w-4 shrink-0 text-accent" />
                   <span>{feature}</span>
                 </li>
               ))}
             </ul>
           </div>
-            {selectedVariant && selectedVariant.stock > 0 && (
-                selectedVariant.stock === 1 ? (
-                <p className="text-xs font-semibold text-destructive mt-1">
-                    ÚLTIMA DISPONIBLE
-                </p>
-                ) : selectedVariant.stock <= 3 ? (
-                <p className="text-2xs font-semibold text-destructive mt-1">
-                    ÚLTIMAS {selectedVariant.stock} DISPONIBLES
-                </p>
-                ) : null // Si tiene 5 o más, no muestra nada
-            )}
-            {!talleDisponible(selectedSize) && (
+          {selectedVariant && remainingStock > 0 && (
+            remainingStock === 1 ? (
+              <p className="text-xs font-semibold text-destructive mt-1">
+                ÚLTIMA DISPONIBLE
+              </p>
+            ) : remainingStock <= 3 ? (
+              <p className="text-xs font-semibold text-destructive mt-1">
+                ÚLTIMAS {remainingStock} DISPONIBLES
+              </p>
+            ) : null
+          )}
+            {/* {!talleDisponible(selectedSize) && (
               <p className="text-2xl text-destructive" role="alert">
                 AGOTADO
               </p>
-            )}
+            )} */}
           {/* Add to cart */}
           <div className="flex items-center gap-3 pt-2">
             <button
               onClick={handleAdd}
-              disabled={!talleDisponible(selectedSize)}
+              disabled={!talleDisponible(selectedSize) || isOutOfStock}
               className={`flex flex-1 items-center justify-center gap-2 rounded-md bg-primary py-3 text-sm font-medium text-primary-foreground transition-opacity hover:opacity-90 sm:flex-none sm:px-10 disabled:cursor-not-allowed disabled:hover:opacity-40
                 ${
                   !talleDisponible(selectedSize)
@@ -306,7 +314,7 @@ export function ProductDetail({
                 } `}
             >
               <ShoppingBag className="h-4 w-4" />
-              <span>{added ? "Agregado!" : "Agregar al Carrito"}</span>
+              <span>{added ? "Agregado!" : (isOutOfStock ? "Sin stock" : "Agregar al carrito")}</span>
             </button>
             <button
               onClick={openCart}

@@ -48,7 +48,6 @@ export function CartSidebar() {
           color,
         };
       });
-
       const response = await fetch("/api/pedidos", {
         method: "POST",
         headers: {
@@ -85,7 +84,7 @@ export function CartSidebar() {
 
       const message = `¡Hola! Quiero confirmar el pedido *#${orderId}*\n\n` +
                       `${itemsText}\n\n` +
-                      `*Total: $${totalPrice.toFixed(2)}*`;
+                      `*Total: $${totalPrice}*`;
 
       const encodedMessage = encodeURIComponent(message);
       const phone = "5493834568407";
@@ -256,7 +255,7 @@ export function CartSidebar() {
                 Subtotal
               </span>
               <span className="text-lg font-semibold text-foreground">
-                {"$"}{new Intl.NumberFormat("es-AR").format(totalPrice)}
+                {"$"}{totalPrice}
               </span>
             </div>
             <button 
