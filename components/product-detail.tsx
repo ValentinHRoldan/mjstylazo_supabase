@@ -5,7 +5,7 @@ import { ShoppingBag, Check } from "lucide-react";
 import type { Product } from "@/data/products";
 import { useCart } from "@/components/cart-provider";
 import { StarRating } from "@/components/star-rating";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 
 export function ProductDetail({
@@ -15,6 +15,7 @@ export function ProductDetail({
   product: Product
   initialColor?: string
 }) {
+  const [selectedImage, setSelectedImage] = useState<string | null>(null);
   const principalVariant =
     product.variants.find(v => v.es_principal) ??
     product.variants[0];
@@ -116,21 +117,34 @@ export function ProductDetail({
     if (b.name === principalColor) return 1;
     return 0;
   });
+
+  useEffect(() => {
+    const availableSizes = product.sizes.filter((size) =>
+      talleDisponible(size)
+    );
+
+    if (availableSizes.length === 1) {
+      setSelectedSize(availableSizes[0]);
+    }
+  }, [selectedColor, product]);
+  console.log(product)
   return (
     <main className="mx-auto max-w-6xl px-6 py-10">
       {/* Top section: image + info */}
       <div className="flex flex-col gap-10 lg:flex-row">
         {/* Image */}
-        <div className="relative aspect-square w-full overflow-hidden rounded-lg bg-secondary lg:w-1/2">
+        <div className="relative aspect-3/4 w-full overflow-hidden rounded-lg bg-secondary lg:w-1/2">
         <Image
           src={
             mainImage
           }
           alt={product.name}
           fill
-          className="object-cover"
+          className="object-contain"
           sizes="(max-width: 1024px) 100vw, 50vw"
           priority
+          // className="object-cover object-center transition-transform duration-300 group-hover:scale-105"
+          // sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
         />
         </div>
 
@@ -150,7 +164,11 @@ export function ProductDetail({
           </div>
 
           <p className="text-2xl font-semibold text-foreground">
-            {"$"}{product.price.toFixed(2)}
+            {"$"}{
+              <span>
+                {new Intl.NumberFormat("es-AR").format(product.price)}
+              </span>
+              }
           </p>
 
           <p className="text-sm leading-relaxed text-muted-foreground">
@@ -206,7 +224,6 @@ export function ProductDetail({
             <div className="flex flex-wrap gap-2" role="radiogroup" aria-label="Seleccionar talle">
             {product.sizes.map((size) => {
               const disabled = !talleDisponible(size);
-
               return (
                 <button
                   key={size}
@@ -223,7 +240,7 @@ export function ProductDetail({
                   className={`flex h-10 min-w-[2.75rem] items-center justify-center rounded-md border px-3 text-sm font-medium transition-all
                     ${
                       disabled
-                        ? "opacity-40 cursor-not-allowed"
+                        ? "opacity-40 cursor-not-allowed" 
                         : selectedSize === size
                         ? "border-foreground bg-foreground text-background"
                         : "border-border text-foreground hover:border-muted-foreground"
@@ -265,24 +282,35 @@ export function ProductDetail({
                 <p className="text-xs font-semibold text-destructive mt-1">
                     ÚLTIMA DISPONIBLE
                 </p>
-                ) : selectedVariant.stock < 5 ? (
+                ) : selectedVariant.stock <= 3 ? (
                 <p className="text-2xs font-semibold text-destructive mt-1">
                     ÚLTIMAS {selectedVariant.stock} DISPONIBLES
                 </p>
                 ) : null // Si tiene 5 o más, no muestra nada
             )}
+            {!talleDisponible(selectedSize) && (
+              <p className="text-2xl text-destructive" role="alert">
+                AGOTADO
+              </p>
+            )}
           {/* Add to cart */}
           <div className="flex items-center gap-3 pt-2">
             <button
               onClick={handleAdd}
-              className="flex flex-1 items-center justify-center gap-2 rounded-md bg-primary py-3 text-sm font-medium text-primary-foreground transition-opacity hover:opacity-90 sm:flex-none sm:px-10"
+              disabled={!talleDisponible(selectedSize)}
+              className={`flex flex-1 items-center justify-center gap-2 rounded-md bg-primary py-3 text-sm font-medium text-primary-foreground transition-opacity hover:opacity-90 sm:flex-none sm:px-10 disabled:cursor-not-allowed disabled:hover:opacity-40
+                ${
+                  !talleDisponible(selectedSize)
+                  ? "opacity-40 cursor-not-allowed" 
+                  : "border-border text-foreground hover:border-muted-foreground "
+                } `}
             >
               <ShoppingBag className="h-4 w-4" />
               <span>{added ? "Agregado!" : "Agregar al Carrito"}</span>
             </button>
             <button
               onClick={openCart}
-              className="rounded-md border border-border px-4 py-3 text-sm font-medium text-foreground transition-colors hover:bg-secondary"
+              className={`rounded-md border border-border px-4 py-3 text-sm font-medium text-foreground transition-colors hover:bg-secondary `}
             >
               Ver Carrito
             </button>
@@ -329,10 +357,22 @@ export function ProductDetail({
                 <img
                   src={img}
                   alt={`${product.name} ${index}`}
-                  className="w-full h-48 object-cover hover:scale-105 transition-transform duration-300"
+                  onClick={() => setSelectedImage(img)}
+                  className="w-full aspect-square object-cover hover:scale-105 transition-transform duration-300"
                 />
               </div>
             ))}
+            {selectedImage && (
+                <div
+                  className="fixed inset-0 bg-black/80 flex items-center justify-center z-50"
+                  onClick={() => setSelectedImage(null)}
+                >
+                  <img
+                    src={selectedImage}
+                    className="max-w-[90vw] max-h-[90vh] object-contain"
+                  />
+                </div>
+              )}
           </div>
         ) : (
           <p className="text-sm text-muted-foreground">

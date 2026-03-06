@@ -15,12 +15,12 @@ export function ProductCard({ product }: { product: Product }) {
       href={`/product/${product.id}`}
       className="group flex flex-col overflow-hidden rounded-lg border border-border bg-card transition-shadow hover:shadow-md"
     >
-      <div className="relative aspect-square overflow-hidden bg-secondary">
+      <div className="relative aspect-3/4 overflow-hidden bg-secondary">
         <Image
           src={product.variants[product.variants.findIndex(v => v.es_principal)].images[0]}
           alt={product.name}
           fill
-          className="object-cover transition-transform duration-300 group-hover:scale-105"
+          className="object-contain transition-transform duration-300 group-hover:scale-105"
           sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
         />
       </div>
@@ -35,7 +35,11 @@ export function ProductCard({ product }: { product: Product }) {
 
         <div className="mt-auto flex items-center justify-between pt-3">
           <span className="text-lg font-semibold text-foreground">
-            {"$"}{product.price.toFixed(2)}
+            {"$"}{
+              <span>
+                {new Intl.NumberFormat("es-AR").format(product.price)}
+              </span>
+              }
           </span>
           <div className="flex gap-1.5">
             {

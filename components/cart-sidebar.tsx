@@ -76,9 +76,9 @@ export function CartSidebar() {
       const itemsText = formattedItems
         .map(
           (item) => 
-            `• *${item.nombre}*\n` + // Negrita en WhatsApp
-            `  Talle: *${item.size}\n*` +
-            `  Color: *${item.color} ${colorMapEmoji[item.color] || ""}\n*` +
+            `• *${item.nombre}* •\n` + // Negrita en WhatsApp
+            `  Talle: *${item.size}*\n` +
+            `  Color: *${item.color}* ${colorMapEmoji[item.color] || ""}\n` +
             `  Cantidad: *${item.cantidad}*`
         )
         .join("\n\n"); // Doble salto entre productos para mayor claridad
@@ -201,7 +201,7 @@ export function CartSidebar() {
                     </p>
 
                     <p className="text-sm font-semibold text-foreground">
-                      {"$"}{(product.price * quantity).toFixed(2)}
+                      {"$"}{new Intl.NumberFormat("es-AR").format(product.price * quantity)}
                       
                     </p>
                     {variant && variant.stock > 0 && (
@@ -256,7 +256,7 @@ export function CartSidebar() {
                 Subtotal
               </span>
               <span className="text-lg font-semibold text-foreground">
-                {"$"}{totalPrice.toFixed(2)}
+                {"$"}{new Intl.NumberFormat("es-AR").format(totalPrice)}
               </span>
             </div>
             <button 
