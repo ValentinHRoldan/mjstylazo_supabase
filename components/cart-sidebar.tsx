@@ -87,7 +87,7 @@ export function CartSidebar() {
                       `*Total: $${totalPrice}*`;
 
       const encodedMessage = encodeURIComponent(message);
-      const phone = "5493834568407";
+      const phone = process.env.NEXT_PUBLIC_WHATSAPP_NUMBER;
 
       //usando api wsp
       const url = `https://api.whatsapp.com/send?phone=${phone}&text=${encodedMessage}`;
