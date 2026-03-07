@@ -123,3 +123,7 @@
     @apply bg-background text-foreground;
   }
 }
+.cart-open .floating-contactt {
+  opacity: 0;
+  pointer-events: none;
+}

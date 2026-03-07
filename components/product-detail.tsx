@@ -277,7 +277,7 @@ export function ProductDetail({
               {product.features.map((feature) => (
                 <li
                   key={feature}
-                  className="flex items-start gap-2 text-sm text-muted-foreground"
+                  className="flex items-start gap-2 text-sm"
                 >
                   <Check className="mt-0.5 h-4 w-4 shrink-0 text-accent" />
                   <span>{feature}</span>

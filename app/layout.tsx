@@ -3,7 +3,7 @@ import { Geist, Geist_Mono } from 'next/font/google'
 import { Analytics } from '@vercel/analytics/next'
 import { AppShell } from '@/components/app-shell'
 import './globals.css'
-
+import { FloatingContact } from "@/components/floating-contact";
 const _geist = Geist({ subsets: ["latin"] });
 const _geistMono = Geist_Mono({ subsets: ["latin"] });
 
@@ -32,15 +32,36 @@ export const metadata: Metadata = {
 
 export default function RootLayout({
   children,
-}: Readonly<{
+}: {
   children: React.ReactNode
-}>) {
+}) {
   return (
     <html lang="es">
       <body className="font-sans antialiased">
-        <AppShell>
-          {children}
-        </AppShell>
+        <div className="relative min-h-screen overflow-hidden">
+
+          {/* Logo gigante de fondo */}
+        <div className="fixed inset-0 flex items-center justify-center pointer-events-none -z-10">
+          <img
+            src="/ICONSVG.svg"
+            className="w-425 opacity-11 rotate-12 select-none"
+          />
+        </div>
+
+          {/* Capa oscura */}
+          {/* <div className="absolute inset-0 bg-black/60"></div> */}
+
+          {/* Contenido */}
+          <div className="relative z-10">
+            <AppShell>
+              {children}
+            </AppShell>
+
+            <FloatingContact />
+          </div>
+
+        </div>
+
         <Analytics />
       </body>
     </html>

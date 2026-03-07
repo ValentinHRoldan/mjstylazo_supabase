@@ -3,7 +3,7 @@
 import Image from "next/image";
 import { X, Plus, Minus, Trash2, ShoppingBag } from "lucide-react";
 import { useCart } from "@/components/cart-provider";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 export function CartSidebar() {
   const {
@@ -109,6 +109,14 @@ export function CartSidebar() {
     }, 5000);
   }
 };
+
+  useEffect(() => {
+    if (isOpen) {
+      document.body.classList.add("cart-open")
+    } else {
+      document.body.classList.remove("cart-open")
+    }
+  }, [isOpen])
   return (
     <>
       {/* Overlay */}
