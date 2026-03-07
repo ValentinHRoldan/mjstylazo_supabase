@@ -8,25 +8,29 @@ const _geist = Geist({ subsets: ["latin"] });
 const _geistMono = Geist_Mono({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
-  title: 'REMERAS — Tienda de Remeras',
+  title: 'MJstylazo - Tienda de remeras',
   description: 'Tienda online de remeras de algodón premium. Encontrá tu remera favorita.',
-  generator: 'v0.app',
+  generator: 'MJ Store',
   icons: {
     icon: [
       {
-        url: '/icon-light-32x32.png',
+        url: '/iconomj.png',
         media: '(prefers-color-scheme: light)',
+        sizes: '32x32',
+        type: 'image/png'
       },
       {
-        url: '/icon-dark-32x32.png',
+        url: '/iconomj.png',
         media: '(prefers-color-scheme: dark)',
+        sizes: '32x32',
+        type: 'image/png'
       },
-      {
-        url: '/icon.svg',
-        type: 'image/svg+xml',
-      },
+      // {
+      //   url: '/ICONSVG.svg',
+      //   type: 'image/svg+xml',
+      // },
     ],
-    apple: '/apple-icon.png',
+    apple: '/iconomj.png',
   },
 }
 

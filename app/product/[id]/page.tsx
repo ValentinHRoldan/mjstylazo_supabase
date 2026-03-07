@@ -34,7 +34,7 @@ export default async function ProductPage({
   searchParams: { color?: string }
 }) {
   const { id } = await params
-
+  const resolvedSearchParams = await searchParams
   // const { data: product, error } = await supabase
   //   .from("productos")
   //   .select("*")
@@ -65,7 +65,7 @@ export default async function ProductPage({
   return (
   <ProductDetail
     product={transformProduct(product)}
-    initialColor={searchParams?.color}
+    initialColor={resolvedSearchParams?.color}
   />
 )
 }
