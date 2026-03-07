@@ -19,7 +19,7 @@ export default async function HomePage() {
     console.error(error)
   }
   const products = (productos ?? []).map(transformProduct)
-  console.log(productos);
+
   // console.log(JSON.stringify(productos, null, 2))
   return (
     <main className="mx-auto max-w-6xl px-6 py-10">
