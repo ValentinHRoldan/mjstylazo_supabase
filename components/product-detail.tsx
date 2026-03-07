@@ -135,7 +135,6 @@ export function ProductDetail({
       setSelectedSize(availableSizes[0]);
     }
   }, [selectedColor, product]);
-  console.log(product)
   return (
     <main className="mx-auto max-w-6xl px-6 py-10">
       {/* Top section: image + info */}
